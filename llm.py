@@ -8,8 +8,26 @@ class llm:
         """ initializes the LLM to GPT2 """
         self.model_name = "gpt2"
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name,
-                                                           output_hidden_states=True)
+                                                           output_hidden_states=True,
+                                                           return_dict_in_generate=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
+
+
+    def __str__(self):
+        """ string object of underlying model
+        Params
+        ------
+        None
+
+        Returns
+        -------
+        name : string 
+        """
+
+        return str(self.model)
+    
+
 
     def tokenize(self, text):
         """ tokenizes some given text using tokenizer 
@@ -25,15 +43,18 @@ class llm:
             tensors representing tokenized text
         """
 
-        return self.tokenizer(text, return_tensors="pt")
+        return self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
 
-    def generate_activations(self, token):
+    def generate_activations(self, token, layer):
         """ completes forward pass with given tokens
 
         Params
         ------
         tensor : token
             input tokens to be used in the pass
+
+        int : layer
+            block whose activations we wish to see. Must be > 1.
         
         Returns
         -------
@@ -43,7 +64,7 @@ class llm:
         
         with torch.no_grad():
             outputs = self.model(**token)
-            hidden_states = outputs.hidden_states
+            hidden_states = outputs.hidden_states[layer]
 
         return hidden_states
     

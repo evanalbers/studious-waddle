@@ -35,3 +35,9 @@ class SparseAutoEncoder(nn.Module):
         reconstruction = self.decoder_layer(representation)
 
         return reconstruction
+    
+
+
+        
+
+
