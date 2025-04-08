@@ -6,7 +6,11 @@ import argparse
 def submit_training_job():
     # Create the job script
     job_script = """#!/bin/bash
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:1
 #SBATCH --job-name=sae_training
+#SBATCH --mem=4GB
 #SBATCH --time=1:05:00  
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
