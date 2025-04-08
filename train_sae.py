@@ -201,6 +201,7 @@ def train_sae(stream_width, hidden_width, epochs, batches, lr, dataloader, llm, 
                 save_checkpoint(checkpoint_path, epoch, batch_idx,
                                  model.state_dict(), optimizer.state_dict(), loss)
                 
+                print(f"Paused training on batch {batch_idx} out of {batches}")
                 print(f"Training time: {current_time - job_start_time:.2f} seconds")
                 print(f"Checkpoint saved. Resume to continue training.")
                 return False, model
