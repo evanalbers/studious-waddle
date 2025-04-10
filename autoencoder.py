@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch
 
 class SparseAutoEncoder(nn.Module):
     """ class representing the sparse autoencoder that will learn activation patterns """
@@ -17,6 +18,16 @@ class SparseAutoEncoder(nn.Module):
 
         super().__init__()
 
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Set default precision based on device
+        if self.device.type == "cuda":
+            self.dtype = torch.float16  # Use half precision on GPU by default
+        else:
+            self.dtype = torch.float32
+            
+        print(f"Using device: {self.device}, dtype: {self.dtype}")
+
         self.encoder_layer = nn.Linear(stream_width, hidden_width)
         self.decoder_layer = nn.Linear(hidden_width, stream_width)
         self.relu = nn.ReLU()
@@ -24,6 +35,9 @@ class SparseAutoEncoder(nn.Module):
         # initializing using Kaiming Unifform init. 
         nn.init.kaiming_uniform_(self.encoder_layer.weight, nonlinearity="relu")
         nn.init.kaiming_uniform_(self.decoder_layer.weight, nonlinearity="linear")
+
+        self.to(self.device)
+        self.to(self.dtype)
         
     def forward(self, x):
         """ forward pass function for the autoencoder """
