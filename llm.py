@@ -6,10 +6,25 @@ class llm:
 
     def __init__(self):
         """ initializes the LLM to GPT2 """
+
+        
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Set default precision based on device
+        if self.device.type == "cuda":
+            self.dtype = torch.float16  # Use half precision on GPU by default
+        else:
+            self.dtype = torch.float32
+            
+        print(f"Using device: {self.device}, dtype: {self.dtype}")
+
         self.model_name = "gpt2"
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name,
                                                            output_hidden_states=True,
-                                                           return_dict_in_generate=True)
+                                                           return_dict_in_generate=True,
+                                                           torch_dtype=self.dtype,
+                                                           device_map=self.device,
+                                                           use_cache=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.tokenizer.pad_token = self.tokenizer.eos_token
 
