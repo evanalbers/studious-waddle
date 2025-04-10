@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:v100-pcie:1
+#SBATCH --gres=gpu:a100:1
 #SBATCH --job-name=sae_training
 #SBATCH --mem=32GB
 #SBATCH --time=01:05:00 
