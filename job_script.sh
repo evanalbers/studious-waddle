@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=sae_training
 #SBATCH --mem=10GB
-#SBATCH --time=1:05:00  
+#SBATCH --time=00:05:00 
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
 
