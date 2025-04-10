@@ -3,13 +3,10 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=sae_training
-#SBATCH --mem=10GB
+#SBATCH --mem=20GB
 #SBATCH --time=00:05:00 
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
-
-module load anaconda
-
 
 python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=300
 
