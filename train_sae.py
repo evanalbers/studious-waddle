@@ -245,7 +245,7 @@ if __name__ == "__main__":
 
     epochs = 2
 
-    batches = 500000
+    batches = 2000
 
     block = 5
 
