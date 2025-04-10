@@ -11,7 +11,7 @@
 # module load anaconda
 
 
-python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=3600
+python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=300
 
 # Check if training is complete
 if grep -q "Training complete!" sae_training_${SLURM_JOB_ID}.out; then
@@ -20,7 +20,4 @@ if grep -q "Training complete!" sae_training_${SLURM_JOB_ID}.out; then
     tar -czf final_model.tar.gz sae_model.pt
     echo "Model compressed and ready for transfer at: ~/projects/sae_training/final_model.tar.gz"
 
-else
-    # Submit another job
-    sbatch job_script.sh
 fi
