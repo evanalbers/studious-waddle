@@ -8,6 +8,10 @@
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
 
+module load anaconda3
+
+conda init bash
+
 conda activate LLM_Manipulator
 
 python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=3600
