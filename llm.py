@@ -28,7 +28,6 @@ class llm:
         return str(self.model)
     
 
-
     def tokenize(self, text):
         """ tokenizes some given text using tokenizer 
 
