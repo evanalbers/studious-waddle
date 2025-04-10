@@ -8,7 +8,7 @@
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
 
-# module load anaconda
+module load anaconda
 
 
 python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=300
