@@ -8,7 +8,7 @@
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
 
-python train_script.py --checkpoint_path=sae_model.pt --time_limit=3600
+python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=3600
 
 # Check if training is complete
 if grep -q "Training complete!" sae_training_${SLURM_JOB_ID}.out; then
