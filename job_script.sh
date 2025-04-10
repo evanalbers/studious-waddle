@@ -3,8 +3,8 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:v100-pcie:1
 #SBATCH --job-name=sae_training
-#SBATCH --mem=4GB
-#SBATCH --time=00:05:00 
+#SBATCH --mem=32GB
+#SBATCH --time=01:05:00 
 #SBATCH --output=sae_training_%j.out
 #SBATCH --error=sae_training_%j.err
 
