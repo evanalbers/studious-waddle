@@ -42,6 +42,8 @@ class SparseAutoEncoder(nn.Module):
     def forward(self, x):
         """ forward pass function for the autoencoder """
 
+        x = x.to(self.device, self.dtype)
+
         # hidden higher dimensional representation
         representation = self.relu(self.encoder_layer(x))
 
