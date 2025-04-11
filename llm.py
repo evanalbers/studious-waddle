@@ -84,8 +84,10 @@ class llm:
             activation vector of a given transformer in model - shape TBD
            """
         
+        inputs = {k: v.to(self.device) for k, v in token.items()}
+        
         with torch.no_grad():
-            outputs = self.model(**token)
+            outputs = self.model(**inputs)
             hidden_states = outputs.hidden_states[layer]
 
         return hidden_states
