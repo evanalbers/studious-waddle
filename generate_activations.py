@@ -14,7 +14,7 @@ def save_activations(activations, filename="activations.pt"):
         data = torch.empty(activations.shape)
 
     print("activations shape:", activations.shape)
-    print("file shale: ", data.shape)
+    print("file shape: ", data.shape)
 
     data = torch.cat((activations, data), dim=0)
 
