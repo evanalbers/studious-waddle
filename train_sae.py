@@ -8,6 +8,7 @@ import torch.optim as optim
 from autoencoder import SparseAutoEncoder
 from tqdm import tqdm
 import os
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
 import time
 from huggingface_hub.errors import HfHubHTTPError
 
@@ -166,6 +167,9 @@ def train_sae(stream_width, hidden_width, epochs, batches, lr, dataloader, llm, 
 
         """
     
+    # clear out memory
+    torch.cuda.empty_cache()
+
     # starting job timer 
     job_start_time = time.time()
 
@@ -176,6 +180,9 @@ def train_sae(stream_width, hidden_width, epochs, batches, lr, dataloader, llm, 
     
     # main training loop
     for epoch in range(start_epoch, epochs):
+
+        # clear out memory
+        torch.cuda.empty_cache()    
 
         dataloader_iter = iter(dataloader)
 
@@ -226,6 +233,13 @@ def train_sae(stream_width, hidden_width, epochs, batches, lr, dataloader, llm, 
             loss = criterion(reconstruction, batch) + model.get_l1_loss(batch)
             loss.backward()
             optimizer.step()
+
+            # memory optimization 
+            del batch  
+            del reconstruction
+            torch.cuda.empty_cache()
+
+            
 
             # update statistics
             epoch_loss += loss.item()

@@ -67,7 +67,7 @@ class llm:
 
         return self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
 
-    def generate_activations(self, token, layer):
+    def generate_activations(self, token, layer, return_output=False):
         """ completes forward pass with given tokens
 
         Params
@@ -89,6 +89,9 @@ class llm:
         with torch.no_grad():
             outputs = self.model(**inputs)
             hidden_states = outputs.hidden_states[layer]
+
+        if return_output:
+            return outputs, hidden_states
 
         return hidden_states
     
