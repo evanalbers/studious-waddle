@@ -4,7 +4,7 @@ import torch
 class SparseAutoEncoder(nn.Module):
     """ class representing the sparse autoencoder that will learn activation patterns """
 
-    def __init__(self, stream_width, hidden_width):
+    def __init__(self, stream_width, hidden_width, l1_penalty):
         """ initializes autoencoder
         Params
         ------
@@ -14,9 +14,14 @@ class SparseAutoEncoder(nn.Module):
         hidden_width : int
             int representing number of hidden params - must be GREATER 
             than stream_width
+
+        l1_penalty : float
+            coeff to multiply l1 penalty by
            """
 
         super().__init__()
+
+        self.l1_penalty = l1_penalty
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -52,7 +57,9 @@ class SparseAutoEncoder(nn.Module):
 
         return reconstruction
     
-
+    def get_l1_loss(self, x):
+        """ calculates l1 loss for current weight and input """
+        return self.l1_penalty * torch.sum(torch.abs(self.relu(self.encoder_layer(x))))
 
         
 

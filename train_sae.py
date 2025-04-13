@@ -9,6 +9,7 @@ from autoencoder import SparseAutoEncoder
 from tqdm import tqdm
 import os
 import time
+from huggingface_hub.errors import HfHubHTTPError
 
 def initialize_model(stream_width, hidden_width, lr, checkpoint_path=""):
     """ function that initializes the model from a checkpoint, or from scratch 
@@ -207,10 +208,22 @@ def train_sae(stream_width, hidden_width, epochs, batches, lr, dataloader, llm, 
                 return False, model
 
             # train model on an additional batch of activations
-            batch = generate_batch(dataloader_iter=dataloader_iter, llm=llm, block=block)
+
+            # in case API limits are exceeded, save the model 
+            try:
+                batch = generate_batch(dataloader_iter=dataloader_iter, llm=llm, block=block)
+            except HfHubHTTPError as e:
+                if "429" in str(e):
+                    print(f"Rate limit exceeded. Saving model and exiting. Error: {e}")
+                    loss = epoch_loss / (batch_idx + 1) if batch_idx > 0 else 0
+                    save_checkpoint(checkpoint_path, epoch, batch_idx,
+                                 model.state_dict(), optimizer.state_dict(), loss)
+            
             optimizer.zero_grad()
             reconstruction = model(batch)
-            loss = criterion(reconstruction, batch)
+
+            # include l1 penalty to ensure sparseness
+            loss = criterion(reconstruction, batch) + model.get_l1_loss(batch)
             loss.backward()
             optimizer.step()
 
@@ -241,7 +254,7 @@ if __name__ == "__main__":
 
     stream = 768
 
-    hidden = 1e6
+    hidden = 1000000
 
     epochs = 2
 
