@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     dataset = IterableCrawl()
 
-    dataloader = DataLoader(dataset, batch_size = 1024)
+    dataloader = DataLoader(dataset, batch_size = 4)
     sample_llm = llm()
 
     stream = 768

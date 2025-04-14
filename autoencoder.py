@@ -57,6 +57,12 @@ class SparseAutoEncoder(nn.Module):
 
         return reconstruction
     
+    def get_activations(self, x):
+        """ returns activations for a given pass """
+        x = x.to(self.device, self.dtype)
+
+        return self.relu(self.encoder_layer(x))
+    
     def get_l1_loss(self, x):
         """ calculates l1 loss for current weight and input """
         return self.l1_penalty * torch.sum(torch.abs(self.relu(self.encoder_layer(x))))

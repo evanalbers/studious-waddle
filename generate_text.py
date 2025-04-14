@@ -6,7 +6,42 @@ from llm import llm
 import torch
 import numpy as np
 from tqdm import tqdm
-from torch.nn.utils.rnn import pad_sequence
+
+
+def generate_prompts(quantity, length):
+    """ generates a set of prompts to submit to SAE """
+
+    prompt = "Tell me a short story, of around " + str(length) + " tokens, about a "
+
+    dog_breeds = ["German Shepherd", "Bulldog",
+                  "Labrador Retriever", "French Bulldog",
+                  "Siberian Husky", "Beagle",
+                  "Poodle", "Chihuahua",
+                  "Dachshund", "dog"]
+    
+    cat_breeds = ["Siamese cat", "British Shorthair cat", 
+                  "Maine Coon cat", "Persian cat", 
+                  "Sphynx cat", "Abyssinian cat",
+                  "Burmese cat", 'Scottish Fold cat', 
+                  "Himalayan cat", "cat"]
+
+    rand = np.random.default_rng()
+
+    pbar = tqdm(range(quantity), initial = 0)
+
+    prompts = []
+
+    for iteration_idx in pbar:
+
+        dog_index = rand.integers(low=0, high=9)
+        cat_index = rand.integers(low=0, high=9)
+
+        prompts.append(prompt + dog_breeds[dog_index])
+        prompts.append(prompt + cat_breeds[cat_index])
+
+    return prompts
+
+
 
 
 def generate_data(quantity, length, response_data_filename, activation_data_filename):
@@ -80,6 +115,31 @@ def generate_data(quantity, length, response_data_filename, activation_data_file
     torch.save(activation_data, activation_data_filename)
 
 
+def generate_prompt(dog, length):
+    """ generates a prompt and returns corresponding data """
+
+    prompt = "Tell me a short story, of around " + str(length) + " tokens, about a "
+
+    dog_breeds = ["German Shepherd", "Bulldog",
+                  "Labrador Retriever", "French Bulldog",
+                  "Siberian Husky", "Beagle",
+                  "Poodle", "Chihuahua",
+                  "Dachshund", "dog"]
+    
+    cat_breeds = ["Siamese cat", "British Shorthair cat", 
+                  "Maine Coon cat", "Persian cat", 
+                  "Sphynx cat", "Abyssinian cat",
+                  "Burmese cat", 'Scottish Fold cat', 
+                  "Himalayan cat", "cat"]
+
+    rand = np.random.default_rng()
+
+    if dog:
+        breed = rand.integers(low=0, high=9)
+        return prompt + dog_breeds[breed], dog, breed
+    else:
+        breed = rand.integers(low=0, high=9)
+        return prompt + cat_breeds[breed], 0, breed
 
 if __name__ == "__main__":
 
