@@ -65,7 +65,7 @@ class llm:
             tensors representing tokenized text
         """
 
-        return self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
+        return self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=256)
 
     def generate_activations(self, token, layer, return_output=False):
         """ completes forward pass with given tokens
