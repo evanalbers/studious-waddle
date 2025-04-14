@@ -163,6 +163,9 @@ def plot_single_feature(activations, feature, categories, animal, target_categor
     # getting activations of a specific feature
     feature_activations = activations[:, best]
 
+    print(feature_activations.shape)
+    print(target_indices)
+
     sns.displot(x=feature_activations, kind='kde', hue=target_indices, fill=True, multiple='stack')
 
     plt.xlabel('Activation Level')
