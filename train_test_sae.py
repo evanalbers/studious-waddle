@@ -8,7 +8,7 @@ from llm import llm
 
 if __name__ == "__main__":
 
-    prompt_set = generate_prompts(1000, 512)
+    prompt_set = generate_prompts(100000, 512)
     
     dataloader = DataLoader(prompt_set, batch_size=4)
 
@@ -20,11 +20,11 @@ if __name__ == "__main__":
 
     epochs = 2
 
-    batches = 250
+    batches = 2500
 
     block = 5
 
     sae = train_sae(stream, hidden, epochs, batches, 0.001, 
-                    dataloader=dataloader, llm=sample_llm, block=block, checkpoint_path="test_checkpoint.pt", time_limit=120)
+                    dataloader=dataloader, llm=sample_llm, block=block, checkpoint_path="test_small_checkpoint.pt", time_limit=600)
 
     

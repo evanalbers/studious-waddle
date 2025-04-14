@@ -46,7 +46,7 @@ def initialize_model(stream_width, hidden_width, lr, checkpoint_path=""):
     print(checkpoint_path)
     if os.path.exists(checkpoint_path):
         checkpoint = torch.load(checkpoint_path)
-        model = SparseAutoEncoder(stream_width=stream_width, hidden_width=hidden_width)
+        model = SparseAutoEncoder(stream_width=stream_width, hidden_width=hidden_width, l1_penalty=0.0001)
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer = optim.Adam(model.parameters(), lr=lr)
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])

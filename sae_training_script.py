@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     stream = 768
 
-    hidden = 1000000
+    hidden = 1000
 
     epochs = 2
 
