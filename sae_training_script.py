@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     dataset = IterableCrawl()
 
-    dataloader = DataLoader(dataset, batch_size = 4096)
+    dataloader = DataLoader(dataset, batch_size = 2048)
     sample_llm = llm()
 
     stream = 768
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     epochs = 2
 
-    batches = 2000
+    batches = 4000
 
     block = 5
 
