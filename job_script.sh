@@ -10,13 +10,17 @@
 
 module load cuda/11.8
 
-python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=300
+#  python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=300
+
+python rnn_experiments/train_rnn.py
+
+
 
 # Check if training is complete
 if grep -q "Training complete!" sae_training_${SLURM_JOB_ID}.out; then
     echo "Training has completed successfully."
     # compressing model to reduce transfer size
-    tar -czf final_model.tar.gz sae_model.pt
+    tar -czf final_model.tar.gz shakespeare_rnn.pt
     echo "Model compressed and ready for transfer at: ~/projects/sae_training/final_model.tar.gz"
 
 fi

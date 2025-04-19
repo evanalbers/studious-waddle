@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     model = rnn(vocab_size)
 
-    train_rnn(model, dataloader, 1)
+    train_rnn(model, dataloader, 5)
 
     sample = generate_text(model,
                            seed_text="ROMEO: ",
