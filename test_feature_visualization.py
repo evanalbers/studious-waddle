@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from llm import llm
+from numpy.linalg import LinAlgError
 
 
 def load_model(filepath):
@@ -16,7 +17,7 @@ def load_model(filepath):
 
     checkpoint = torch.load(filepath)
 
-    model = SparseAutoEncoder(768, 22, 0.0001)
+    model = SparseAutoEncoder(768, 1000, 0.0001)
 
     model.load_state_dict(checkpoint["model_state_dict"])
 
@@ -137,7 +138,7 @@ def calculate_log_likelihoods(activations, categories, target_category):
     
     return log_likelihood_ratios, bins
 
-def plot_single_feature(activations, feature, categories, animal, target_category=5, target_animal = 0):
+def plot_single_feature(activations, feature, categories, animal, block, target_category=5, target_animal = 0):
     """ plotting activation of a single feature """
 
     # Create figure
@@ -166,14 +167,39 @@ def plot_single_feature(activations, feature, categories, animal, target_categor
     print(feature_activations.shape)
     print(target_indices)
 
-    sns.displot(x=feature_activations, kind='kde', hue=target_indices, fill=True, multiple='stack')
+    dog_breeds = ["German Shepherd", "Bulldog",
+                  "Labrador Retriever", "French Bulldog",
+                  "Siberian Husky", "Beagle",
+                  "Poodle", "Chihuahua",
+                  "Dachshund", "dog"]
+    
+    cat_breeds = ["Siamese cat", "British Shorthair cat", 
+                  "Maine Coon cat", "Persian cat", 
+                  "Sphynx cat", "Abyssinian cat",
+                  "Burmese cat", 'Scottish Fold cat', 
+                  "Himalayan cat", "cat"]
+    
+    if target_animal:
+        breed = dog_breeds[target_category]
+    else:
+        breed = cat_breeds[target_category]
 
-    plt.xlabel('Activation Level')
-    plt.ylabel('Density')
+    try:
+        g = sns.displot(x=feature_activations, kind='kde', hue=target_indices, fill=True, multiple='stack', legend=False)
+        ax = g.axes[0, 0] 
+        ax.legend(labels=[f'Target Class: {breed}', 'Other Classes'], loc='upper right')
 
-    plt.show()
+        plt.xlabel('Activation Level')
+        plt.ylabel('Density')
+        plt.title(f"Highest 'accurate' activation feature in layer {block}")
 
+        plt.show()
+    
+    except LinAlgError as e:
 
+        print("Failed on graph of breed : " + str(target_category) + " animal : " + str(target_animal)) 
+
+    
 
 
 if __name__ == "__main__":
@@ -182,13 +208,14 @@ if __name__ == "__main__":
 
     model = load_model("test_checkpoint.pt")
 
-    tokens, animal, breed, activations = generate_activations(model, sample_llm, 1000, block=5)
+    tokens, animal, breed, activations = generate_activations(model, sample_llm, 100, block=5)
 
     llr, bins = calculate_log_likelihoods(activations, breed, target_category=5)
 
     for ani in range(2):
         for breed_type in range(10):
-            plot_single_feature(activations, 5, categories=breed, animal=animal, target_animal=ani, target_category=breed_type)
+            print("animal ", ani, "breed ", breed_type)
+            plot_single_feature(activations, 5, categories=breed, animal=animal, target_animal=ani, target_category=breed_type, block=5)
 
     # plot_top_discriminative_features(activations, breed, target_category=5, llr_values=llr)
 

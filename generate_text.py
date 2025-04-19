@@ -33,8 +33,8 @@ def generate_prompts(quantity, length):
 
     for iteration_idx in pbar:
 
-        dog_index = rand.integers(low=0, high=9)
-        cat_index = rand.integers(low=0, high=9)
+        dog_index = rand.integers(low=0, high=10)
+        cat_index = rand.integers(low=0, high=10)
 
         prompts.append(prompt + dog_breeds[dog_index])
         prompts.append(prompt + cat_breeds[cat_index])
@@ -69,8 +69,8 @@ def generate_data(quantity, length, response_data_filename, activation_data_file
 
     for iteration_idx in pbar:
         
-        dog_index = rand.integers(low=0, high=9)
-        cat_index = rand.integers(low=0, high=9)
+        dog_index = rand.integers(low=0, high=10)
+        cat_index = rand.integers(low=0, high=10)
 
         dog_prompt = prompt + dog_breeds[dog_index]
         cat_prompt = prompt + cat_breeds[cat_index]
@@ -135,10 +135,10 @@ def generate_prompt(dog, length):
     rand = np.random.default_rng()
 
     if dog:
-        breed = rand.integers(low=0, high=9)
+        breed = rand.integers(low=0, high=10)
         return prompt + dog_breeds[breed], dog, breed
     else:
-        breed = rand.integers(low=0, high=9)
+        breed = rand.integers(low=0, high=10)
         return prompt + cat_breeds[breed], 0, breed
 
 if __name__ == "__main__":

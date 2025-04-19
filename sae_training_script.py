@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     epochs = 2
 
-    batches = 4000
+    batches = 40000
 
     block = 5
 
