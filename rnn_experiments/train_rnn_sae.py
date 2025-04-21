@@ -210,8 +210,8 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
         count = 0
         for x_batch, y_batch in pbar:
 
-            x_batch.to(device)
-            y_batch.to(device)
+            x_batch = x_batch.to(device)
+            y_batch = y_batch.to(device)
 
             with torch.no_grad():
                 _, _, activations = lang_model.forward(x_batch, return_activations=True)
