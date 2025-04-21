@@ -176,19 +176,23 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
     job_start_time = time.time()
 
 
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
     # init model
-    model_data = torch.load('shakespeare_rnn.pt', map_location=torch.device('cpu'))
+    model_data = torch.load('shakespeare_rnn.pt', map_location=device)
     
     char_to_idx = model_data['char_to_idx']
     idx_to_char = model_data['idx_to_char']
     vocab_size = model_data['vocab_size']
 
-    lang_model = rnn(vocab_size)
+    lang_model = rnn(vocab_size).to(device)
 
     lang_model.load_state_dict(model_data['model_state_dict'])
     lang_model.eval()
 
     sae_model = SparseAutoEncoder(stream_width=stream_width, hidden_width=hidden_width, l1_penalty=0.0001)
+
+    sae_model.to(device)
 
     optimizer = optimizer = optim.Adam(sae_model.parameters(), lr=lr)
 
@@ -205,6 +209,9 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
         epoch_loss = 0
         count = 0
         for x_batch, y_batch in pbar:
+
+            x_batch.to(device)
+            y_batch.to(device)
 
             with torch.no_grad():
                 _, _, activations = lang_model.forward(x_batch, return_activations=True)
