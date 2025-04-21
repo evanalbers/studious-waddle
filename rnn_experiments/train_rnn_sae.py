@@ -234,7 +234,7 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
             pbar.set_postfix({"avg_loss": f"{current_epoch_avg_loss:.4f}", "batch_loss": f"{loss.item():.4f}"})
 
         # epoch summary
-        print(f"Epoch {epoch + 1}/{epochs} completed, average loss: {epoch_loss/batches:.4f}")
+        # print(f"Epoch {epoch + 1}/{epochs} completed, average loss: {epoch_loss/batches:.4f}")
 
         # save a checkpoint post epoch, just in case
         save_checkpoint(checkpoint_path, epoch + 1, 0, sae_model.state_dict(), 
