@@ -12,7 +12,7 @@ module load cuda/11.8
 
 #  python sae_training_script.py --checkpoint_path=sae_model.pt --time_limit=300
 
-python rnn_experiments/train_rnn.py
+python rnn_experiments/shakespeare_saes.py
 
 
 
