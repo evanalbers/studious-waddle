@@ -178,6 +178,11 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    if device.type == "cuda":
+        dtype = torch.float16  # Use half precision on GPU by default
+    else:
+        dtype = torch.float32
+
     # init model
     model_data = torch.load('shakespeare_rnn.pt', map_location=device)
     
@@ -185,14 +190,14 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
     idx_to_char = model_data['idx_to_char']
     vocab_size = model_data['vocab_size']
 
-    lang_model = rnn(vocab_size).to(device)
+    lang_model = rnn(vocab_size).to(device).to(dtype=dtype)
 
     lang_model.load_state_dict(model_data['model_state_dict'])
     lang_model.eval()
 
     sae_model = SparseAutoEncoder(stream_width=stream_width, hidden_width=hidden_width, l1_penalty=0.0001)
 
-    sae_model.to(device)
+    sae_model.to(device).to(dtype=dtype)
 
     optimizer = optimizer = optim.Adam(sae_model.parameters(), lr=lr)
 
@@ -210,8 +215,8 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
         count = 0
         for x_batch, y_batch in pbar:
 
-            x_batch = x_batch.to(device)
-            y_batch = y_batch.to(device)
+            x_batch = x_batch.to(device).to(dtype=dtype)
+            y_batch = y_batch.to(device).to(dtype=dtype)
 
             with torch.no_grad():
                 _, _, activations = lang_model.forward(x_batch, return_activations=True)

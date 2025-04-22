@@ -65,6 +65,7 @@ class SparseAutoEncoder(nn.Module):
     
     def get_l1_loss(self, x):
         """ calculates l1 loss for current weight and input """
+        x = x.to(dtype=self.dtype)
         return self.l1_penalty * torch.sum(torch.abs(self.relu(self.encoder_layer(x))))
 
         
