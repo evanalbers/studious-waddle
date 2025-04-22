@@ -215,7 +215,7 @@ def train_sae(stream_width, hidden_width, epochs, lr, dataloader, layer, checkpo
         count = 0
         for x_batch, y_batch in pbar:
 
-            x_batch = x_batch.to(device).to(dtype=dtype)
+            x_batch = x_batch.to(device).to(dtype=dtype).long()
             y_batch = y_batch.to(device).to(dtype=dtype)
 
             with torch.no_grad():
