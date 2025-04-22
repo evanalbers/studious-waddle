@@ -25,7 +25,11 @@ class rnn(nn.Module):
     def forward(self, x, return_activations=False):
         """ forward pass through network """
 
+        x = x.long()
+
         embedded = self.embedding(x)
+
+        embedded = embedded.to(torch.float32)
 
         if self.hidden is None:
             h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_dim).to(x.device)
